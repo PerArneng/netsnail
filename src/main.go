@@ -7,9 +7,8 @@ import (
 
 func main() {
 
-    conf := netsnail.NewConfig()
-    conf.ParseArgs()
+	conf := netsnail.NewConfig()
+	conf.ParseArgs()
 
-
-	fmt.Printf("netsnail %d\n", conf.Port)
+	fmt.Printf("netsnail %s\n", conf)
 }
