@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"netsnail"
 	"net"
-	"os"
+	//"os"
 )
 
 func main() {
@@ -14,20 +14,23 @@ func main() {
 
 	tcpAddress, err :=
 		net.ResolveTCPAddr(fmt.Sprintf("localhost:%d", conf.LocalPort))
-	if err != nil {
-		fmt.Printf("failed %s\n", err)
-		os.Exit(1)
-	}
+	netsnail.AbortIfError(err)
 
 	listener, err := net.ListenTCP("tcp", tcpAddress)
-	if err != nil {
-		fmt.Printf("failed %s\n", err)
-		os.Exit(1)
+	netsnail.AbortIfError(err)
+
+	for {
+		con, err := listener.AcceptTCP()
+		netsnail.AbortIfError(err)
+
+		proxy, err := netsnail.NewProxy(con, conf.Hostname, conf.Port)
+		if err != nil {
+			netsnail.Logf("could not create proxy: %s\n", err)
+			con.Close()
+		} else {
+			proxy.Start()
+		}
 	}
-
-	con, err := listener.AcceptTCP()
-
-	err := con.Close()
 
 	listener.Close()
 

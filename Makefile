@@ -3,6 +3,8 @@ include $(GOROOT)/src/Make.cmd
 
 CLEANFILES=netsnail
 
+NETSNAIL_SRC=src/config.go src/delayproxy.go src/netsnailhelpers.go
+
 all: netsnail
 
 netsnail: main.$O
@@ -11,6 +13,6 @@ netsnail: main.$O
 main.$O: netsnail.$O src/main.go
 	$(QUOTED_GOBIN)/$(GC) -I . -o main.$O src/main.go
 
-netsnail.$O: src/config.go
-	$(QUOTED_GOBIN)/$(GC) -o netsnail.$O src/config.go
+netsnail.$O: $(NETSNAIL_SRC)
+	$(QUOTED_GOBIN)/$(GC) -o netsnail.$O $(NETSNAIL_SRC)
 
