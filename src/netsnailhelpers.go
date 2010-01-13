@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-var logger *log.Logger = log.New(os.Stdout, nil, "netsnail", log.Lok)
+var logger *log.Logger = log.New(os.Stdout, nil, "netsnail: ", log.Lok)
 
 func AbortIfError(err os.Error) {
 	if err != nil {

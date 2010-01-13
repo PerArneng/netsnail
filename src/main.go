@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"netsnail"
 	"net"
-	//"os"
+	"runtime"
 )
 
 func main() {
+	runtime.GOMAXPROCS(8)
+
+	connectionCounter := 0
 
 	conf := netsnail.NewConfig()
 	conf.ParseArgs()
@@ -23,9 +26,15 @@ func main() {
 		con, err := listener.AcceptTCP()
 		netsnail.AbortIfError(err)
 
-		proxy, err := netsnail.NewProxy(con, conf.Hostname, conf.Port)
+		connectionCounter += 1
+
+		id := fmt.Sprintf("%s[%d]", con.LocalAddr(), connectionCounter)
+
+		netsnail.Logf("%s: connected\n", id)
+
+		proxy, err := netsnail.NewProxy(id, con, conf.Hostname, conf.Port, conf.TransferDelay)
 		if err != nil {
-			netsnail.Logf("could not create proxy: %s\n", err)
+			netsnail.Logf("%s: creating proxy failed: %s\n", id, err)
 			con.Close()
 		} else {
 			proxy.Start()

@@ -4,9 +4,22 @@ ABOUT
 
   Netsnail is a simple network proxy that simulates low bandwidth.
 
-STATUS
+RUNNING
 
-  This tool is under development and is currently not in a working state.
+Usage of netsnail:
+  -port=80: the port of the remote host
+  -hostname="localhost": the remote hostname
+  -transfer-delay=0: the delay on data transfer in ms
+  -local-port=9091: the port of this proxy
+
+EXAMPLE
+
+  netsnail -hostname="www.google.com" --transfer-delay=10000 -local-port=8080
+  
+  This will open the port 8080 on the local machine and forward the traffic to
+  www.google.com on port 80 (default). The transfer delay of 1000ms will be
+  slept on each data transfer between the local machine and the server in both
+  directions.
 
 LICENSE
 
