@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"syscall"
 )
 
 type DelayProxy struct {
@@ -25,6 +24,9 @@ func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, tra
 	if err != nil {
 		return nil, err
 	}
+
+	//clientConn.SetTimeout(5000000000)
+	//serverConn.SetTimeout(5000000000)
 
 	return &DelayProxy{id, clientConn, serverConn, transferDelay}, nil
 }
@@ -55,20 +57,17 @@ func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finished
 		n, err = src.Read(buffer)
 		if n < 1 {
 			if err != nil {
-				Logf("%s: error: %s\n", this.id, err)
+				Logf("%s: read error: %s\n", this.id, err)
 			}
 			break
 		}
 
-		terr := syscall.Sleep(int64(this.transferDelay * 1000000))
-		if terr != 0 {
-			Logf("%s: sleep error: %d\n", this.id, terr)
-		}
+		Sleep(this.transferDelay)
 
 		n, err = dest.Write(buffer[0:n])
 		if n < 1 {
 			if err != nil {
-				Logf("%s: error: %s\n", this.id, err)
+				Logf("%s: write error: %s\n", this.id, err)
 			}
 			break
 		}

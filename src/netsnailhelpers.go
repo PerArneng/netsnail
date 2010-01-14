@@ -4,9 +4,11 @@ import (
 	"os"
 	"fmt"
 	"log"
+	"syscall"
+	"time"
 )
 
-var logger *log.Logger = log.New(os.Stdout, nil, "netsnail: ", log.Lok)
+var logger *log.Logger = log.New(os.Stdout, nil, "", log.Lok)
 
 func AbortIfError(err os.Error) {
 	if err != nil {
@@ -15,4 +17,14 @@ func AbortIfError(err os.Error) {
 	}
 }
 
-func Logf(format string, v ...) { go logger.Logf(format, v) }
+func Logf(format string, v ...) {
+	now := time.LocalTime().Format("2006-01-02 15:04:05")
+	go logger.Logf(now+": "+format, v)
+}
+
+func Sleep(ms int) {
+	err := syscall.Sleep(int64(ms * 1000000))
+	if err != 0 {
+		Logf("sleep error: %d\n", err)
+	}
+}

@@ -15,11 +15,12 @@ type Config struct {
 func NewConfig() *Config { return new(Config) }
 
 func (this *Config) ParseArgs() {
-	flag.IntVar(&this.LocalPort, "local-port", 9091, "the port of this proxy")
-	flag.IntVar(&this.Port, "port", 80, "the port of the remote host")
+	flag.IntVar(&this.LocalPort, "l", 9091, "the local port of this proxy")
+	flag.IntVar(&this.Port, "r", 80, "the port of the remote host")
 	flag.StringVar(&this.Hostname,
-		"hostname", "localhost", "the remote hostname")
-	flag.IntVar(&this.TransferDelay, "transfer-delay", 0, "the delay on data transfer in ms")
+		"h", "localhost", "the remote hostname")
+	flag.IntVar(&this.TransferDelay, "d", 0,
+		"the delay on data transfer in ms")
 	flag.Parse()
 }
 
