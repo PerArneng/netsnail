@@ -14,7 +14,7 @@ Usage of netsnail:
 
 EXAMPLE
 
-  netsnail -hostname="www.google.com" --transfer-delay=10000 -local-port=8080
+  netsnail -h="www.google.com" -d=1000 -l=8080
   
   This will open the port 8080 on the local machine and forward the traffic to
   www.google.com on port 80 (default). The transfer delay of 1000ms will be
