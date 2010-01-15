@@ -1,3 +1,7 @@
+/*
+ * (C) 2010 Per Arneng
+ * License: GPL v2
+ */
 package main
 
 import (
@@ -32,7 +36,8 @@ func main() {
 
 		netsnail.Logf("%s: connected\n", id)
 
-		proxy, err := netsnail.NewProxy(id, con, conf.Hostname, conf.Port, conf.TransferDelay)
+		proxy, err := netsnail.NewProxy(id, con, conf.Hostname, conf.Port,
+			conf.TransferDelay, conf.InitialDelay)
 		if err != nil {
 			netsnail.Logf("%s: creating proxy failed: %s\n", id, err)
 			con.Close()

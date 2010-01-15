@@ -1,3 +1,7 @@
+/*
+ * (C) 2010 Per Arneng
+ * License: GPL v2
+ */
 package netsnail
 
 import (
@@ -11,9 +15,10 @@ type DelayProxy struct {
 	clientConn    *net.TCPConn
 	serverConn    *net.TCPConn
 	transferDelay int
+	initialDelay  int
 }
 
-func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, transferDelay int) (*DelayProxy, os.Error) {
+func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, transferDelay int, initialDelay int) (*DelayProxy, os.Error) {
 
 	addr, err := net.ResolveTCPAddr(fmt.Sprintf("%s:%d", hostname, port))
 	if err != nil {
@@ -25,15 +30,14 @@ func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, tra
 		return nil, err
 	}
 
-	//clientConn.SetTimeout(5000000000)
-	//serverConn.SetTimeout(5000000000)
-
-	return &DelayProxy{id, clientConn, serverConn, transferDelay}, nil
+	return &DelayProxy{id, clientConn, serverConn, transferDelay, initialDelay}, nil
 }
 
 func (this *DelayProxy) Start() { go this.startDataTransfer() }
 
 func (this *DelayProxy) startDataTransfer() {
+
+	Sleep(this.initialDelay)
 
 	finishedChan := make(chan int)
 
@@ -56,9 +60,11 @@ func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finished
 	for {
 		n, err = src.Read(buffer)
 		if n < 1 {
-			if err != nil {
-				Logf("%s: read error: %s\n", this.id, err)
-			}
+			break
+		}
+
+		if err != nil {
+			Logf("%s: read error: %d %s\n", this.id, n, err)
 			break
 		}
 
@@ -66,9 +72,11 @@ func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finished
 
 		n, err = dest.Write(buffer[0:n])
 		if n < 1 {
-			if err != nil {
-				Logf("%s: write error: %s\n", this.id, err)
-			}
+			break
+		}
+
+		if err != nil {
+			Logf("%s: write error: %d %s\n", this.id, n, err)
 			break
 		}
 	}

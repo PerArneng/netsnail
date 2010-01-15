@@ -8,6 +8,7 @@ RUNNING
 
 Usage of netsnail:
   -d=0: the delay on data transfer in ms
+  -i=0: a fixed delay in ms when each connection is made
   -h="localhost": the remote hostname
   -l=9091: the local port of this proxy
   -r=80: the port of the remote host

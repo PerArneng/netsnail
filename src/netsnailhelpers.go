@@ -1,3 +1,7 @@
+/*
+ * (C) 2010 Per Arneng
+ * License: GPL v2
+ */
 package netsnail
 
 import (

@@ -1,3 +1,7 @@
+/*
+ * (C) 2010 Per Arneng
+ * License: GPL v2
+ */
 package netsnail
 
 import (
@@ -10,6 +14,7 @@ type Config struct {
 	Port          int
 	Hostname      string
 	TransferDelay int
+	InitialDelay  int
 }
 
 func NewConfig() *Config { return new(Config) }
@@ -21,6 +26,8 @@ func (this *Config) ParseArgs() {
 		"h", "localhost", "the remote hostname")
 	flag.IntVar(&this.TransferDelay, "d", 0,
 		"the delay on data transfer in ms")
+	flag.IntVar(&this.InitialDelay, "i", 0,
+		"a fixed delay in ms when each connection is made")
 	flag.Parse()
 }
 
