@@ -5,10 +5,11 @@
 package netsnail
 
 import (
-	"fmt"
 	"net"
 	"os"
 )
+
+const CHUNK_SIZE int = 1024
 
 type DelayProxy struct {
 	id            string
@@ -20,12 +21,7 @@ type DelayProxy struct {
 
 func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, transferDelay int, initialDelay int) (*DelayProxy, os.Error) {
 
-	addr, err := net.ResolveTCPAddr(fmt.Sprintf("%s:%d", hostname, port))
-	if err != nil {
-		return nil, err
-	}
-
-	serverConn, err := net.DialTCP("tcp", nil, addr)
+	serverConn, err := TCPConnect(hostname, port)
 	if err != nil {
 		return nil, err
 	}
@@ -33,9 +29,9 @@ func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, tra
 	return &DelayProxy{id, clientConn, serverConn, transferDelay, initialDelay}, nil
 }
 
-func (this *DelayProxy) Start() { go this.startDataTransfer() }
+func (this *DelayProxy) Start() { go this.startProxy() }
 
-func (this *DelayProxy) startDataTransfer() {
+func (this *DelayProxy) startProxy() {
 
 	Sleep(this.initialDelay)
 
@@ -55,7 +51,7 @@ func (this *DelayProxy) startDataTransfer() {
 func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finishedChan chan int) {
 	var err os.Error
 	var n int
-	var buffer = new([500]byte)
+	var buffer = new([CHUNK_SIZE]byte)
 
 	for {
 		n, err = src.Read(buffer)

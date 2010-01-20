@@ -5,7 +5,6 @@
 package netsnail
 
 import (
-	"fmt"
 	"flag"
 )
 
@@ -29,9 +28,4 @@ func (this *Config) ParseArgs() {
 	flag.IntVar(&this.InitialDelay, "i", 0,
 		"a fixed delay in ms when each connection is made")
 	flag.Parse()
-}
-
-func (this *Config) String() string {
-	return fmt.Sprintf("[Config| local-port: %d, hostname: '%s', port: %d, transfer-delay: %d]",
-		this.LocalPort, this.Hostname, this.Port, this.TransferDelay)
 }

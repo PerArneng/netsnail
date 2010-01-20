@@ -32,18 +32,22 @@ func main() {
 
 		connectionCounter += 1
 
-		id := fmt.Sprintf("%s[%d]", con.LocalAddr(), connectionCounter)
+		go func() {
 
-		netsnail.Logf("%s: connected\n", id)
+			id := fmt.Sprintf("%s[%d]", con.LocalAddr(), connectionCounter)
 
-		proxy, err := netsnail.NewProxy(id, con, conf.Hostname, conf.Port,
-			conf.TransferDelay, conf.InitialDelay)
-		if err != nil {
-			netsnail.Logf("%s: creating proxy failed: %s\n", id, err)
-			con.Close()
-		} else {
-			proxy.Start()
-		}
+			netsnail.Logf("%s: connected\n", id)
+
+			proxy, err := netsnail.NewProxy(id, con, conf.Hostname, conf.Port,
+				conf.TransferDelay, conf.InitialDelay)
+			if err != nil {
+				netsnail.Logf("%s: creating proxy failed: %s\n", id, err)
+				con.Close()
+			} else {
+				proxy.Start()
+			}
+
+		}()
 	}
 
 	listener.Close()

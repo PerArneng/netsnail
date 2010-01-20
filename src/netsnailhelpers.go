@@ -10,7 +10,10 @@ import (
 	"log"
 	"syscall"
 	"time"
+	"net"
 )
+
+const NR_NANOSEC_IN_MS int64 = 1000000
 
 var logger *log.Logger = log.New(os.Stdout, nil, "", log.Lok)
 
@@ -27,8 +30,22 @@ func Logf(format string, v ...) {
 }
 
 func Sleep(ms int) {
-	err := syscall.Sleep(int64(ms * 1000000))
+	err := syscall.Sleep(int64(ms) * NR_NANOSEC_IN_MS)
 	if err != 0 {
 		Logf("sleep error: %d\n", err)
 	}
+}
+
+func TCPConnect(hostname string, port int) (*net.TCPConn, os.Error) {
+	addr, err := net.ResolveTCPAddr(fmt.Sprintf("%s:%d", hostname, port))
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := net.DialTCP("tcp", nil, addr)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }
