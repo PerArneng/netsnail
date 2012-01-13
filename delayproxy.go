@@ -51,7 +51,7 @@ func (this *DelayProxy) startProxy() {
 func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finishedChan chan int) {
 	var err os.Error
 	var n int
-	var buffer = new([CHUNK_SIZE]byte)
+	var buffer = make([]byte, CHUNK_SIZE)
 
 	for {
 		n, err = src.Read(buffer)

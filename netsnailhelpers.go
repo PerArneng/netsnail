@@ -15,7 +15,7 @@ import (
 
 const NR_NANOSEC_IN_MS int64 = 1000000
 
-var logger *log.Logger = log.New(os.Stdout, nil, "", log.Lok)
+var logger *log.Logger = log.New(os.Stdout, "", log.LstdFlags)
 
 func AbortIfError(err os.Error) {
 	if err != nil {
@@ -24,9 +24,9 @@ func AbortIfError(err os.Error) {
 	}
 }
 
-func Logf(format string, v ...) {
+func Logf(format string, v ...interface{}) {
 	now := time.LocalTime().Format("2006-01-02 15:04:05")
-	go logger.Logf(now+": "+format, v)
+	go logger.Printf(now+": "+format, v...)
 }
 
 func Sleep(ms int) {
@@ -37,7 +37,7 @@ func Sleep(ms int) {
 }
 
 func TCPConnect(hostname string, port int) (*net.TCPConn, os.Error) {
-	addr, err := net.ResolveTCPAddr(fmt.Sprintf("%s:%d", hostname, port))
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", hostname, port))
 	if err != nil {
 		return nil, err
 	}
