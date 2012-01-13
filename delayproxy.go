@@ -4,10 +4,7 @@
  */
 package netsnail
 
-import (
-	"net"
-	"os"
-)
+import "net"
 
 const CHUNK_SIZE int = 1024
 
@@ -19,7 +16,7 @@ type DelayProxy struct {
 	initialDelay  int
 }
 
-func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, transferDelay int, initialDelay int) (*DelayProxy, os.Error) {
+func NewProxy(id string, clientConn *net.TCPConn, hostname string, port int, transferDelay int, initialDelay int) (*DelayProxy, error) {
 
 	serverConn, err := TCPConnect(hostname, port)
 	if err != nil {
@@ -49,7 +46,7 @@ func (this *DelayProxy) startProxy() {
 }
 
 func (this *DelayProxy) tcpForward(src *net.TCPConn, dest *net.TCPConn, finishedChan chan int) {
-	var err os.Error
+	var err error
 	var n int
 	var buffer = make([]byte, CHUNK_SIZE)
 
