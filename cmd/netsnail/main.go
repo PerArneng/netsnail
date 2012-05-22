@@ -6,7 +6,7 @@ package main
 
 import (
 	"fmt"
-	"netsnail"
+	"github.com/purex01/netsnail"
 	"net"
 	"runtime"
 )
@@ -20,7 +20,7 @@ func main() {
 	conf.ParseArgs()
 
 	tcpAddress, err :=
-		net.ResolveTCPAddr(fmt.Sprintf("0.0.0.0:%d", conf.LocalPort))
+		net.ResolveTCPAddr("tcp", fmt.Sprintf("0.0.0.0:%d", conf.LocalPort))
 	netsnail.AbortIfError(err)
 
 	listener, err := net.ListenTCP("tcp", tcpAddress)
