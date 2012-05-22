@@ -1,5 +1,9 @@
 NETSNAIL 0.8
 
+INSTALL
+  Run:
+  "go get github.com/purex01/netsnail/cmd/netsnail"
+
 ABOUT
 
   Netsnail is a simple network proxy that simulates low bandwidth.
